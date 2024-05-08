@@ -6,7 +6,7 @@ pipeline {
         kubernetes {
             defaultContainer 'sonar'
             idleMinutes 1
-            yaml agentLauncher(name: "sonarScannerPodTemplate.yaml")
+            yaml agentLauncher(name: "sonarScannerPodTemplate")
         }
     }
     options {
