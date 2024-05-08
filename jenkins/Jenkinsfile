@@ -1,0 +1,29 @@
+@Library('infra-jenkins-shared-library@feat/sonarqube') _
+pipeline {
+
+    options {
+        ansiColor('xterm')
+        disableConcurrentBuilds(abortPrevious: true)
+        //only keep last 5 builds and artifacts
+        buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
+    }
+
+    stages {
+        stage('Sonarqube Scan') {
+            agent {
+                kubernetes {
+                    defaultContainer 'sonar'
+                    idleMinutes 1
+                    yaml agentLauncher(name: "sonarScannerPodTemplate.yaml")
+                }
+            }
+            steps {
+                script {
+                    withCredentials([token(credentialsId: 'sonarqube-credentials-token', variable: 'SONAR_TOKEN')]) {
+                        sonarScanner(project: "test", sourcePath: ".")
+                    }
+                }
+            }
+        }
+    }
+}
