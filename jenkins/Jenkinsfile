@@ -8,10 +8,6 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
     }
 
-    environment {
-        SONAR_TOKEN = credentials('sonarqube-credentials-token')
-    }
-
     stages {
         stage('Sonarqube Scan') {
             steps {
