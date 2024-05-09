@@ -1,14 +1,6 @@
-@Library('infra-jenkins-shared-library@feat/sonarqube') _
 pipeline {
+    agent any
 
-
-    agent {
-        kubernetes {
-            defaultContainer 'sonar'
-            idleMinutes 1
-            yaml agentLauncher(name: "sonarScannerPodTemplate")
-        }
-    }
     options {
         ansiColor('xterm')
         disableConcurrentBuilds(abortPrevious: true)
@@ -22,10 +14,9 @@ pipeline {
 
     stages {
         stage('Sonarqube Scan') {
-            steps {
-                script {
-                    sonarScanner(project: "test", sourcePath: ".")
-                }
+            def scannerHome = tool 'sonarqube-lilt';
+                withSonarQubeEnv('sonarqube-lilt') {
+                sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=test -Dsonar.sources=."
             }
         }
     }
