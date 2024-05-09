@@ -14,10 +14,12 @@ pipeline {
 
     stages {
         stage('Sonarqube Scan') {
-            script {
-                def scannerHome = tool 'sonarqube-lilt';
-                withSonarQubeEnv('sonarqube-lilt') {
-                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=test -Dsonar.sources=."
+            steps {
+                script {
+                    def scannerHome = tool 'sonarqube-lilt';
+                    withSonarQubeEnv('sonarqube-lilt') {
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=test -Dsonar.sources=."
+                    }
                 }
             }
         }
